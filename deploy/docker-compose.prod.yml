@@ -1,0 +1,16 @@
+services:
+  splitwise-arbitrage:
+    image: ${IMAGE:-ghcr.io/santor3d/splitwise-arbitrage:main}
+    container_name: splitwise-arbitrage
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./state:/app/state
+    command: ["python", "-m", "splitwise_arbitrage", "schedule", "--apply"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import splitwise_arbitrage"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
